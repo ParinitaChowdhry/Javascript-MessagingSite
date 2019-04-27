@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <link rel="stylesheet" href="/static/styles.css">
+        <title>Flack</title>
+    </head>
+    <body>
+
+        <div>
+            User name :
+            <label id="display_username"> </label>   
+            List of Channels : 
+            <ul id ="display_channelname"> 
+            </ul>
+
+            <!-- <ul id="label_msg_socket"> </ul> -->
+
+            <div id="label_msg"> </div>
+
+            <label id="name">Your Name:</label>
+            <label id="label_username"> </label>
+            
+            <br>
+            <input type="text" id ="input_username">
+            <button id="submit_username"> Submit </button>
+            <br>
+            input name of your channel :
+            <input type="text" id ="input_channelname">
+            <button id="submit_channelname"> Submit </button>
+            <ul id ="channel">
+
+            </ul>
+
+            <input type ="text" id ="input_message">
+            <button id ="submit_message"> Submit </button>
+        </div>
+    </body>
+</html>
