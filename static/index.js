@@ -16,7 +16,10 @@ window.onload = function () {
         var request = db.open('Flack_DB');
 
         // error handler
-        request.onerror = ErrorProcessing(event);
+        request.onerror = function() {
+            // If an error occurs with the request, log what it is
+            console.log("There has been an error with retrieving your data: " + request.error);
+          };
 
         // success handler
         request.onsuccess = function (event) {
@@ -28,7 +31,10 @@ window.onload = function () {
             os_user = transaction_user.objectStore('user');
             var request_user = os_user.get(1);
 
-            request_user.onerror = ErrorProcessing(event);
+            request_user.onerror = function() {
+                // If an error occurs with the request, log what it is
+                console.log("There has been an error with retrieving your data: " + request_user.error);
+              };
 
             request_user.onsuccess = function () {
                 // Do something with the request.result!
@@ -56,11 +62,14 @@ window.onload = function () {
                     document.querySelector('#display_channelname').append(li_channelname);
                     cursor.continue();
                 }
-                else {
-                    console.log("No more channels");
-                }
+                // else {
+                //     console.log("No more channels");
+                // }
             };
-            request_channel.onerror = ErrorProcessing(event);
+            request_channel.onerror = function() {
+                // If an error occurs with the request, log what it is
+                console.log("There has been an error with retrieving your data: " + request_channel.error);
+              };
 
         };
 
@@ -116,15 +125,16 @@ document.addEventListener('DOMContentLoaded', () => {
         //recognise which channel is clicked
         if (e.target && e.target.nodeName == "LI") {
             channel_reqd = e.target.textContent;
-            console.log('channel reqd : ');
-            console.log(channel_reqd);
+            // console.log('channel reqd : ');
+            // console.log(channel_reqd);
 
             var x = document.getElementById('label_msg').childNodes;
             var flag = true;
             for (var i = 0; i < x.length; i++) {
-                console.log(x[i].className);
+                // console.log(x[i].className);
                 if (x[i].className == channel_reqd) {
                     flag = false;
+                    // break;
                 }
             }
 
@@ -139,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 request_msg.onsuccess = function () {
                     let cursor_msg = request_msg.result;
-                    console.log(cursor_msg);
+                    // console.log(cursor_msg);
 
                     if (cursor_msg) {
 
@@ -162,8 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             li_msg.append(time);
 
                             document.querySelector('#label_msg').append(li_msg);
-                            console.log('msg : ');
-                            console.log(li_msg);
+                            // console.log('msg : ');
+                            // console.log(li_msg);
                         }
 
                         cursor_msg.continue();
@@ -172,10 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log("No more channels");
                     }
                     const li_msg_old = document.getElementById('label_msg').childNodes;
-                    console.log(li_msg_old.length);
+                    // console.log(li_msg_old.length);
                     li_msg_old.forEach(el => {
                         if (el.className != channel_reqd) {
-                            console.log(el);
+                            // console.log(el);
                             document.getElementById('label_msg').removeChild(el);
                         }
                     });
@@ -201,11 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(input_id).onkeyup = () => {
                 if (document.getElementById(input_id).value.length > 0) {
                     document.getElementById(element_name).disabled = false;
-                    console.log('disabled ' + element_name);
+                    // console.log('disabled ' + element_name);
                 }
                 else {
                     document.getElementById(element_name).disabled = true;
-                    console.log('enabled ' + element_name);
+                    // console.log('enabled ' + element_name);
                 }
             };
         }
@@ -234,16 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#input_channelname').value = "";
 
             var keyRangeValue = IDBKeyRange.only(channel_name);
-            console.log(keyRangeValue);
+            // console.log(keyRangeValue);
 
             let request_channel = os_channel.openCursor(keyRangeValue);
-            console.log(request_channel);
+            // console.log(request_channel);
 
             request_channel.onsuccess = function () {
                 let cursor_channel = request_channel.result;
 
                 if (cursor_channel == null) {
-                    console.log('created');
+                    // console.log('created');
                     socket.emit('submit channel', { 'channel': channel_name });
                 }
                 else {
@@ -276,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // make a request to add our newItem object to the object store
         var addChannel = os_channel.add(newChannel);
         addChannel.onsuccess = function () {
-            console.log(addChannel);
+            // console.log(addChannel);
         };
     });
 
@@ -294,14 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var time = document.createElement('label');
         var current_time = new Date(`${data.time}`);
-        console.log(`${data.time}`);
+        // console.log(`${data.time}`);
         var day = current_time.getDate().toString() + "/" + (current_time.getMonth() + 1).toString() + " "
             + current_time.getHours().toString() + ":" + current_time.getMinutes().toString();
         time.innerHTML = day;
 
         time.className = 'time';
         li_channelname.append(time);
-        if (submit_msg_count === 0 || (user_name != `${data.user}` && submit_msg_count === undefined)) {
+        // if (submit_msg_count === 0 || (user_name != `${data.user}` && submit_msg_count === undefined)) {
             let newMsg = { message: `${data.msg}`, user: `${data.user}`, channel: `${data.channel}`, time: `${data.time}` };
             transaction_message = db.transaction(['message'], 'readwrite');
             os_msg = transaction_message.objectStore('message');
@@ -309,25 +319,25 @@ document.addEventListener('DOMContentLoaded', () => {
             var addMsg = os_msg.add(newMsg);
             addMsg.onsuccess = function () {
                 submit_msg_count = 1;
-                console.log(addMsg);
+                // console.log(addMsg);
             };
-        }
+        // }
         var flag_msg = false;
 
         const existing_msg = document.getElementById('label_msg').childNodes;
-        console.log(existing_msg);
-        console.log(existing_msg.length);
+        // console.log(existing_msg);
+        // console.log(existing_msg.length);
         if (existing_msg.length == 0) {
             flag_msg = true;
         }
         else if (existing_msg[0].className == li_channelname.className) {
-            console.log(existing_msg[0]);
+            // console.log(existing_msg[0]);
             flag_msg = true;
         }
 
         if (flag_msg) {
             document.querySelector('#label_msg').append(li_channelname);
-            console.log('done');
+            // console.log('done');
         }
     });
 
